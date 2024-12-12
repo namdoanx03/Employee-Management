@@ -3,9 +3,16 @@ import EmployeeItem from './EmployeeItem';
 import Button from '../base/Button';
 import Form from '../base/Form';
 import Input from '../base/Input';
+import { Employee } from '../../models/Employee';
 
 const ListEmployee = () => {
     const [showForm, setShowForm] = useState<boolean>(false)
+    const [employeeList , setEmployeeList] = useState<Employee[]>(() => {
+        //callback function
+        const employeeLocal = localStorage.getItem('employees')
+        return employeeLocal ? JSON.parse(employeeLocal) : []
+    })
+
     //hien thi form
     const handleShowForm = (): void => {
         setShowForm(true)
@@ -19,7 +26,7 @@ const ListEmployee = () => {
     }
     return (
       <>
-        {showForm && <Form onClose={handleCloseForm}/>}
+        {showForm && <Form onClose={handleCloseForm} />}
         <div className="w-[80%] m-auto mt-4 h-[100vh]">
           <main className="main">
             <header className="d-flex justify-content-between mb-3">
@@ -53,7 +60,13 @@ const ListEmployee = () => {
                   <th colSpan={3}>Chức năng</th>
                 </tr>
               </thead>
-              <EmployeeItem />
+              <tbody>
+                {employeeList.map((employee: Employee, index: number) => (
+                  <tr key={employee.id}>
+                    <EmployeeItem employee={employee} index ={index}/>
+                  </tr>
+                ))}
+              </tbody>
             </table>
             <footer className="d-flex justify-content-end align-items-center gap-3">
               <ul className="pagination">
