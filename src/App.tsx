@@ -1,13 +1,10 @@
 import "./App.css";
-import Form from "./components/base/Form";
-import ListEmployee from "./components/employee/listEmployee";
+import ListEmployee from "./components/employee/ListEmployee";
 
 function App() {
   return (
     <>
       <ListEmployee/>
-      {/* Form thêm mới nhân viên */}
-      <Form/>
       {/* Modal xác nhận chặn tài khoản */}
       <div className="overlay" hidden>
         <div className="modal-custom">
