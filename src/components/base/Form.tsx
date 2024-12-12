@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { Employee } from "../../models/Employee";
 import { formatDate } from "../util/formatData";

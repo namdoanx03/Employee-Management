@@ -1,10 +1,11 @@
 import { Employee } from "../../models/Employee";
 
 type PropTypes = {
-    index: number
-    employee : Employee
-}
-const EmployeeItem = ({ index, employee} : PropTypes) => {
+  index: number;
+  employee: Employee;
+  showModal: (id: number) => void
+};
+const EmployeeItem = ({ index, employee, showModal }: PropTypes) => {
   return (
     <>
       <td>{index + 1}</td>
@@ -38,10 +39,10 @@ const EmployeeItem = ({ index, employee} : PropTypes) => {
         <span className="button button-edit">Sửa</span>
       </td>
       <td>
-        <span className="button button-delete">Xóa</span>
+        <span onClick={() => showModal(employee.id)} className="button button-delete">Xóa</span>
       </td>
     </>
   );
-}
+};
 
 export default EmployeeItem
