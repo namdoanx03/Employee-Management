@@ -13,6 +13,9 @@ const ListEmployee = () => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [idDelete, setIdDelete] = useState<number>(0)
     const [employeeNameDel, setEmployeeNameDel] = useState<string>("")
+    const [showModalToggle, setShowModalToggle] = useState<boolean>(false)
+    const [idToggle, setIdToggle] = useState<number>(0);
+    const [employeeInfo, setEmployeeInfo] = useState<Employee | null>(null);
 
     const [employeeList , setEmployeeList] = useState<Employee[]>(() => {
         //callback function
@@ -63,12 +66,45 @@ const ListEmployee = () => {
         setEmployeeList(filterEmployees)
     }
 
+    //ham mo modal xac nhan chan
+    const handleShowModalToggle = (id:number) => {
+        //cap nhat trang thai de mo modal
+        setShowModalToggle(true)
+        //cap nhat State de lay id can cap nhat
+        setIdToggle(id)
+        // lay ra thong tin nhan vien can chan
+       const findEmployee = employeeList.find((employee: Employee) => employee.id === id);
+       // cap nhan ten cua nhan vien can chan
+       if(findEmployee){
+           setEmployeeInfo(findEmployee);
+       }
+    }
+
+    //ham dong modal xac nhan chan
+    const handleCloseModalToggle = () => {
+      //cap nhat trang thai de dong modal
+      setShowModalToggle(false);
+    };
+    //ham xu li chuc nang chan/bo chan nhan vien
+    const handleToggleStatus = () => {
+        // B1:tim kiem vi tri cua nhan vien 
+        const findIndexEmployee =  employeeList.findIndex((employee : Employee) => employee.id === idToggle)
+        // b2: cap nhat trang thai cua nhan vien trong mang tai vi tri tim thay 
+        if(findIndexEmployee !== -1){
+            employeeList[findIndexEmployee].status = !employeeList[findIndexEmployee].status
+        }
+        // b3:luu tru du lieu moi tren localStorage
+        saveData("employees", employeeList)
+        // b4:dong modal
+        setShowModalToggle(false)
+        // b5:cap nhat lai danh sach 
+    }
     
     return (
       <>
         {showForm && <Form onClose={handleCloseForm} />}
 
-        {/* Component modal  */}
+        {/* Component modal xac nhan xoa*/}
         {showModal && (
           <Modal
             title="Xác nhận"
@@ -82,6 +118,22 @@ const ListEmployee = () => {
             onConfirm={handleDeleteEmployee}
           />
         )}
+        {/* Component xac nhan chan / bo chan */}
+        {showModalToggle && (
+          <Modal
+            title="Xác nhận"
+            content={
+              <>
+                Bạn có chắc chắn muốn{" "}
+                {employeeInfo?.status ? "chặn" : "bỏ chặn"}{" "}
+                <strong>{employeeInfo?.employeeName}</strong> này?
+              </>
+            }
+            onClose={handleCloseModalToggle}
+            onConfirm={handleToggleStatus}
+          />
+        )}
+
         <div className="w-[80%] m-auto mt-4 h-[100vh]">
           <main className="main">
             <header className="d-flex justify-content-between mb-3">
@@ -119,6 +171,7 @@ const ListEmployee = () => {
                 {employeeList.map((employee: Employee, index: number) => (
                   <tr key={employee.id}>
                     <EmployeeItem
+                      toggleStatus={handleShowModalToggle}
                       showModal={handleShowModal}
                       employee={employee}
                       index={index}
